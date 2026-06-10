@@ -10,13 +10,17 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
  *
  *   400 messages.N.content.0.tool_use.id: String should match pattern '^[a-zA-Z0-9...]'
  *
- * This hook runs before each LLM call and strips, non-destructively (the
+ * The context hook runs before each LLM call and strips, non-destructively (the
  * on-disk session file is untouched):
  *   - assistant toolCall items with an empty/invalid id or name
  *   - toolResult messages whose toolCallId is empty or doesn't match a kept call
  *   - assistant messages left with no content after stripping
  *
- * Provider-agnostic: it cleans the message array pi sends to ANY provider.
+ * The tool_call hook also blocks the same malformed calls during the current
+ * streamed response, preventing visible "Tool  not found" spam.
+ *
+ * Provider-agnostic: it cleans the message array pi sends to ANY provider and
+ * blocks invalid live tool executions before pi dispatches them.
  */
 
 const VALID_ID = /^[a-zA-Z0-9_-]+$/;
@@ -34,6 +38,18 @@ function isValidToolCall(c: any): boolean {
 }
 
 export default function (pi: ExtensionAPI) {
+  pi.on("tool_call", async (event, _ctx) => {
+    const toolCallLike = {
+      type: "toolCall",
+      id: event.toolCallId,
+      name: event.toolName,
+    };
+
+    if (!isValidToolCall(toolCallLike)) {
+      return { block: true, reason: "Blocked malformed empty/invalid tool call" };
+    }
+  });
+
   pi.on("context", async (event, _ctx) => {
     const messages = event.messages as any[];
     let changed = false;

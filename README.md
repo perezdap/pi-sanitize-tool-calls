@@ -33,6 +33,9 @@ This extension hooks pi's `context` event, which fires before each LLM call on
 - orphaned `toolResult` messages pointing at a call that no longer exists
 - assistant turns left empty after stripping
 
+It also hooks pi's `tool_call` event to block malformed calls during the current
+streamed response, preventing visible `Tool  not found` spam.
+
 The on-disk session `.jsonl` is **never modified** — pi simply doesn't transmit
 the malformed turn. This both prevents future corruption and makes an
 already-poisoned session resumable.
@@ -71,6 +74,10 @@ Add to your `~/.pi/agent/settings.json`:
 user prompt ─► agent loop ─► context hook (this extension) ─► provider request
                                    │
                                    └─ strips invalid toolCall / orphan toolResult
+
+LLM tool call ─► tool_call hook (this extension) ─► tool execution
+                         │
+                         └─ blocks empty/invalid tool calls
 ```
 
 The `context` hook receives a deep copy of the outgoing messages and returns a
