@@ -1,0 +1,35 @@
+{
+  "name": "pi-sanitize-tool-calls",
+  "version": "1.0.0",
+  "description": "A pi coding agent extension that strips malformed tool calls from message history before each LLM request, preventing permanent session corruption from provider glitches (e.g. empty tool_use ids emitted under 503 overload).",
+  "keywords": [
+    "pi-package",
+    "pi-coding-agent",
+    "pi-extension",
+    "tool-calls",
+    "sanitize"
+  ],
+  "author": "David Perez (perezdap)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/perezdap/pi-sanitize-tool-calls.git"
+  },
+  "homepage": "https://github.com/perezdap/pi-sanitize-tool-calls#readme",
+  "bugs": {
+    "url": "https://github.com/perezdap/pi-sanitize-tool-calls/issues"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "files": [
+    "extensions",
+    "README.md",
+    "LICENSE"
+  ]
+}
