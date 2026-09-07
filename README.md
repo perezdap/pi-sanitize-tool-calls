@@ -81,7 +81,7 @@ LLM tool call ─► tool_call hook (this extension) ─► tool execution
 ```
 
 The `context` hook receives a deep copy of the outgoing messages and returns a
-filtered array. Validity check for a tool call id is `^[a-zA-Z0-9_-]+$` with a
+filtered array. Validity check for a tool call id is `^[a-zA-Z0-9_|-]+$` with a
 non-empty `name`.
 
 ## Scope / limitations
