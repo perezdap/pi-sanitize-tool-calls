@@ -23,7 +23,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
  * blocks invalid live tool executions before pi dispatches them.
  */
 
-const VALID_ID = /^[a-zA-Z0-9_-]+$/;
+const VALID_ID = /^[a-zA-Z0-9_|-]+$/;
 
 function isValidToolCall(c: any): boolean {
   return (
